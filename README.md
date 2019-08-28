@@ -15,39 +15,39 @@
 ```
 $ python opsec_auto.py -h
 
-usage: opsec_auto.py [-h] [-hc] [-pk] [-gc] [-gm] [-ul] [-it] [-nc]
-                     [-c {nmap_100,nmap_all,nmap_udp,nmap_dns,nmap_smb_ports,nmap_brute}]
+usage: opsec_auto.py [-h] [-pk] [-wa] [-sq] [-nm] [-dn] [-sb] [-en] [-sh]
+                     [-ft] [-sl] [-sm] [-nf] [-a] [-gm] [-ul] [-it] [-fl]
                      [--crt-search] [--flush-db] [--subdomains] [--raw-ip]
                      [--domain DOMAIN] [--version]
 
 Automatically spin up everything from the guide.offsecnewbie.com walk through
 
 optional arguments:
-  -h, --help            show this help message and exit
-  -hc, --helper-commands
-                        show helper commands
-  -pk, --packages       Show interesting packages and their install
-                        instructions
-  -gc, --get-commands   shows all commands offered within the tutorial
-  -gm, --get-modules    shows methodology offered within the tutorial
-  -ul, --useful-links   shows useful link
-  -it                   Install a standardized template to your home directory
-  -nc                   Show all networking commands
-  -c {nmap_100,nmap_all,nmap_udp,nmap_dns,nmap_smb_ports,nmap_brute}
-                        run a command with the shortcode
-  --crt-search          use crt.sh to find subdomains
-  --flush-db            flush the recon-ng database
-  --subdomains          use recon-ng to get a list of subdomains
-  --raw-ip              Get raw ip addresses of subdomains
-  --domain DOMAIN       the target domain
-  --version             show program's version number and exit
+  -h, --help           show this help message and exit
+  -pk, --packages      show interesting packages and their install instructions
+  -wa, --web-app       show web-app commands
+  -sq, --sql           show web-app commands
+  -nm, --nmap          show nmap commands
+  -dn, --dns           shows all dns commands
+  -sb, --smb           shows all smb commands
+  -en, --enum          shows all smb commands
+  -sh, --ssh           shows all ssh commands
+  -ft, --ftp           shows all ftp commands
+  -sl, --ssl           shows all ssl commands
+  -sm, --smtp          shows all smtp commands
+  -nf, --nfs           show all nfs commands
+  -a, --all            shows all smtp commands
+  -gm, --get-modules   shows methodology offered within the tutorial
+  -ul, --useful-links  shows useful link
+  -fl, --fast-lists    get lists that are useful, fast!
+  --version            show program's version number and exit
 ```
 
 
 ### Example Usage
 
 ```
--pk, --packages shows list of pentesting packages
+#Get interesting packages
 python opsec_auto.py -pk
 +Git Packages---+--------------------------------------------------------------------------------+--------------------------------------------------------------------------------------+
 | program name  | program link                                                                   | program_instructions                                                                 |
@@ -71,4 +71,42 @@ python opsec_auto.py -pk
 | golang        | go lang                                                                        | apt-get install go;add-apt-repository ppa:longsleep/golang-backports; apt-get update |
 | gobuster      | gobuster                                                                       | go get github.com/OJ/gobuster                                                        |
 +---------------+--------------------------------------------------------------------------------+--------------------------------------------------------------------------------------+
+```
+```
+# get all SQL commands
+python opsec_auto.py --sql
++SQL Commands--+-------------------------------------------------------------------------------------------------------+-------------------------------------------+
+| SQL COMMANDS | command                                                                                               | command_description                       |
++--------------+-------------------------------------------------------------------------------------------------------+-------------------------------------------+
+| nmap         | nmap -sV -Pn -vv -script=mysql* $ip -p 3306                                                           | sql vuln scan                             |
+| nmap         | ./prog_docs/sql_nmap $ip                                                                              | nmap mysql command                        |
+| sqlmap       | ./prog_docs/sql_map                                                                                   | echoe's example usage                     |
+| metasploit   | ./prog_docs/bashscripts/mssql_enum_ms.sh $ip                                                          | runs ms-sql scanner in metasploit         |
+| bruteforce   | ./prog_docs/bashscripts/mssql_login_ms.sh $ip                                                         | runs metasploits aux brute force programs |
+| bruteforce   | ./prog_docs/bashscripts/hydra_bf.sh $ip                                                               | echo's example of usage                   |
+| bruteforce   | sqlmap -u 'http://$ip/?query' --data='user=foo&pass=bar&submit=Login' --level=5 --risk=3 --dbms=mysql | sqlmaps for query                         |
++--------------+-------------------------------------------------------------------------------------------------------+-------------------------------------------+
+```
+
+```
+# Get all web-app commands
+python opsec_auto.py --web-app
++Web App Commands--+-------------------------------------------------------------------------------------+-----------------------------------+
+| WEB APP COMMANDS | command                                                                             | command_description               |
++------------------+-------------------------------------------------------------------------------------+-----------------------------------+
+| scan             | nikto -h $ip                                                                        | runs nikto against target ip      |
+| scan             | nikto -h $ip -p 80,8080,1234                                                        | runs nikto on different ports     |
+| scan             | nikto -host http://$ip                                                              | runs nikto scan with -host option |
+| discover         | wfuzz -c -z file,fastlists/directory-list-2.3-medium.txt --sc 200 http://$ip/FUZZ   | brute force discovery             |
+| discover         | gobuster -u http://$ip/ -w fastlists/common.txt -s '200,204,301,302,307,403,500' -e | brute force discovery             |
+| discover         | gobuster -u http://$ip/ -w fastlists/CGIs.txt -s '200,204,403,500' -e               | brute force CGI                   |
+| discover         | whatweb $ip                                                                         | identifies all known services     |
+| nmap             | nmap --script http-methods --script-args http-methods.url-path='/test' $ip          | tests allowed methods             |
+| nmap             | nmap --script=http-vuln* $ip                                                        | checks http vulns                 |
+| nmap             | nmap -v -p 80 --script=http-vuln-cve2010-2861 $ip                                   | test for coldfusion               |
+| nmap             | sudo nmap -sU --script=ms-sql-info $ip                                              | nmap to get info                  |
+| bruteforce       | hydra -U http-post-form                                                             | what does module do?              |
+| bruteforce       | hydra -l user -P /usr/share/wordlists/rockyou.txt -f $ip http-get /path             | basic get auth                    |
++------------------+-------------------------------------------------------------------------------------+-----------------------------------+
+
 ```
