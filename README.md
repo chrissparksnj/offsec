@@ -45,9 +45,9 @@ optional arguments:
 
 
 ### Example Usage
+### Get interesting packages
 
 ```
-#Get interesting packages
 python opsec_auto.py -pk
 +Git Packages---+--------------------------------------------------------------------------------+--------------------------------------------------------------------------------------+
 | program name  | program link                                                                   | program_instructions                                                                 |
@@ -72,8 +72,9 @@ python opsec_auto.py -pk
 | gobuster      | gobuster                                                                       | go get github.com/OJ/gobuster                                                        |
 +---------------+--------------------------------------------------------------------------------+--------------------------------------------------------------------------------------+
 ```
+### Get all SQL commands
 ```
-# get all SQL commands
+
 python opsec_auto.py --sql
 +SQL Commands--+-------------------------------------------------------------------------------------------------------+-------------------------------------------+
 | SQL COMMANDS | command                                                                                               | command_description                       |
@@ -88,8 +89,9 @@ python opsec_auto.py --sql
 +--------------+-------------------------------------------------------------------------------------------------------+-------------------------------------------+
 ```
 
+
+### Get all web-app commands
 ```
-# Get all web-app commands
 python opsec_auto.py --web-app
 +Web App Commands--+-------------------------------------------------------------------------------------+-----------------------------------+
 | WEB APP COMMANDS | command                                                                             | command_description               |
