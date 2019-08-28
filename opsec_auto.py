@@ -1,0 +1,296 @@
+#!/usr/bin/env python
+
+import argparse
+import socket
+import prog_docs.text_content as txt
+import subprocess
+import sys
+import pprint
+import inspect
+import wget
+import os
+from terminaltables import AsciiTable
+
+#
+platform = sys.platform
+if platform == "win32":
+    import colorama
+
+    colorama.init()
+
+
+def remove_color(string):
+    b = string[5:-4]
+    return b
+
+
+def debug_object(obj):
+    for i in obj.__dict__.iteritems():
+        print str(type(obj)) + str(i)
+
+
+def get_object_attributes(obj):
+    attributes = inspect.getmembers(obj, lambda a: not (inspect.isroutine(a)))
+    list_of_attributes = [a for a in attributes if not (a[0].startswith('__') and a[0].endswith('__'))]
+    return list_of_attributes
+
+
+def debug_parser(parser):
+    for i in parser.__dict__.iteritems():
+        pprint.pprint(i)
+
+
+def wget_check(url):
+    try:
+        check_wget = wget.download("https://411hall.github.io/assets/files/CTF_template.ctb")
+        print "\nDownloaded CherryTree template to " + os.getcwd()
+    except Exception, e:
+        print e
+
+
+def get_subdomains(domain):
+    try:
+        file_command = "FILENAME=" + os.getcwd() + "/text-files/subdomains.txt"
+        source = "source=" + domain
+        subprocess.call(['recon-cli', "-m", "recon/domains-hosts/hackertarget", "-o", source, "-c", "run"])
+        subprocess.call(
+            ["sudo", "recon-cli", "-m", "reporting/list", "-o", "COLUMN=host", "-o", file_command, "-c", "run"])
+    except Exception, e:
+        print e
+
+
+def get_subdomain_ip(domain):
+    file_command = "FILENAME=" + os.getcwd() + "/text-files/ip_of_subdomain_ips.txt"
+    source = "source=" + domain
+    subprocess.call(['recon-cli', "-m", "recon/domains-hosts/hackertarget", "-o", source, "-c", "run"])
+    subprocess.call(
+        ["sudo", "recon-cli", "-m", "reporting/list", "-o", "COLUMN=ip_address", "-o", file_command, "-c", "run"])
+
+
+def flush_recon_db():
+    try:
+        subprocess.call(["recon-cli", "-C", "query delete from hosts"])
+    except Exception, e:
+        print e
+
+
+def check_if_installed(prog):
+    try:
+        subprocess.call([prog], stderr=open(os.devnull, 'wb'))
+        print "[+] " + str(prog) + " installed."
+        return True
+    except Exception, e:
+        if e.errno == errno.ENOENT:
+            return False
+        else:
+            return e
+
+
+def cert_search(domain):
+    installed = check_if_installed('curl')
+    if installed:
+        filename = "text-files/" + domain + "-ca-certs.txt"
+        f = open(filename, 'w+')
+        subprocess.call(["prog_docs/crt.sh", domain, "|", "sort", "|", "uniq"], stdout=f)
+        f.close()
+        subprocess.call(['cat', filename])
+        print "[+] File saved to: " + filename
+    else:
+        print "CURL not installed or incorrectly configured"
+
+
+def usefullinks():
+    data_array = [['link', 'description'], ]
+    for link in txt.useful_links:
+        list_single = link.split('-->')
+        list_single[0].replace(' ', '')
+        list_single[0].strip()
+        data_array.append(list_single)
+
+    table = AsciiTable(data_array)
+    print table.table
+
+
+def usefulcommands():
+    data_array = [['command', 'description']]
+    for command in txt.commands:
+        list_single = command.split('-->')
+        data_array.append(list_single)
+    table = AsciiTable(data_array)
+    print table.table
+
+
+def networking_commands():
+    make_table(txt.networking_commands, "Networking Commands")
+
+
+# data_array = []
+# for command in txt.networking_commands:
+#	data_array.append(command)
+# table = AsciiTable(data_array, title="Networking Commands")
+# print table.table
+
+def make_table(data, title, inner=None):
+    data_array = []
+    for item in data:
+        data_array.append(item)
+    table = AsciiTable(data_array, title=title)
+    if inner:
+        table.inner_row_border = True
+    print table.table
+
+
+def useful_packages():
+    data_array = []
+    for package in txt.git_commands:
+        data_array.append(package)
+    table = AsciiTable(data_array, title="Git Packages")
+    print table.table
+
+
+def run_command(command):
+    for i in txt.networking_commands:
+        if i[0] == command:
+            run = i[1]
+            run = run[9:-4]
+            print run
+            subprocess.call(run, shell=True)
+
+
+def usefulmethods():
+    make_table(txt.methods, "Methodology", "True")
+
+
+def nmap():
+    make_table(txt.nmap, 'NMAP Commands')
+
+
+def dns():
+    make_table(txt.dns, 'DNS Commands')
+
+
+def smb():
+    make_table(txt.smb, "SMB Commands")
+
+
+def fast_lists():
+    make_table(txt.fastlists, 'fast lists')
+
+
+def enum():
+    make_table(txt.enum_scripts, 'Enumeration Scripts')
+
+
+def ssh():
+    make_table(txt.ssh_commands, "SSH Commands")
+
+
+def ftp():
+    make_table(txt.ftp_commands, "FTP Commands")
+
+
+def ssl():
+    make_table(txt.ssl, "SSL commands")
+
+
+def smtp():
+    make_table(txt.smtp_commands, "SMTP commands")
+
+
+def nfs():
+    make_table(txt.nfs_commands, "NFS commands")
+
+def web_app():
+    make_table(txt.web_app_commands, "Web App Commands")
+
+
+def all_commands():
+    for table in txt.all_commands:
+        make_table(table, "commands")
+
+
+parser = argparse.ArgumentParser(
+    description="Automatically spin up everything from the guide.offsecnewbie.com walk through")
+parser.add_argument('-pk', '--packages', action='store_true', dest='git_packages', default=False,
+                    help='show interesting packages and their install instructions')
+
+
+parser.add_argument('-wa', '--web-app', action='store_true', dest='web_app', default=False, help="show web-app commands")
+parser.add_argument('-nm', '--nmap', action='store_true', dest='nmap', default=False, help="show nmap commands")
+parser.add_argument('-dn', '--dns', action='store_true', dest='dns', default=False, help="shows all dns commands")
+parser.add_argument('-sb', '--smb', action='store_true', dest='smb', default=False, help="shows all smb commands")
+parser.add_argument('-en', '--enum', action='store_true', dest='enum', default=False, help="shows all smb commands")
+parser.add_argument('-sh', '--ssh', action='store_true', dest='ssh', default=False, help="shows all ssh commands")
+parser.add_argument('-ft', '--ftp', action='store_true', dest='ftp', default=False, help="shows all ftp commands")
+parser.add_argument('-sl', '--ssl', action='store_true', dest='ssl', default=False, help="shows all ssl commands")
+parser.add_argument('-sm', "--smtp", action='store_true', dest='smtp', default=False, help="shows all smtp commands")
+parser.add_argument('-nf', '--nfs', action='store_true', dest="nfs", default=False, help="show all nfs commands")
+parser.add_argument('-a', "--all", action='store_true', dest='all_commands', default=False,
+                    help="shows all smtp commands")
+parser.add_argument('-gm', '--get-modules', action='store_true', dest='get_methods', default=False,
+                    help="shows methodology offered within the tutorial")
+parser.add_argument('-ul', '--useful-links', action="store_true", dest="get_links", default=False,
+                    help="shows useful link")
+parser.add_argument('-it', action='store_true', dest='install_template', default=False,
+                    help="install a standardized template to your home directory")
+
+parser.add_argument('-fl', '--fast-lists', action='store_true', dest='fast_list', default=False,
+                    help="get lists that are usefule, fast!")
+parser.add_argument('--crt-search', action='store_true', dest='crtsh', default=False,
+                    help="use crt.sh to find subdomains")
+parser.add_argument("--flush-db", action='store_true', dest='flush_db', default=False,
+                    help="flush the recon-ng database")
+parser.add_argument('--subdomains', action='store_true', dest='getsubs', default=False,
+                    help="use recon-ng to get a list of subdomains")
+parser.add_argument("--raw-ip", action='store_true', dest='getrawips', default=False,
+                    help="get raw ip addresses of subdomains")
+parser.add_argument('--domain', action='store', dest='domain', help='the target domain')
+parser.add_argument('--version', action='version', version='%(prog)s 1.0')
+
+results = parser.parse_args()
+
+if results.fast_list:
+    fast_lists()
+if results.git_packages:
+    useful_packages()
+##############################
+# COMMANDS
+if results.web_app:
+    web_app()
+if results.nmap:
+    nmap()
+if results.dns:
+    dns()
+if results.smb:
+    smb()
+if results.enum:
+    enum()
+if results.ssh:
+    ssh()
+if results.ftp:
+    ftp()
+if results.ssl:
+    ssl()
+if results.smtp:
+    smtp()
+if results.nfs:
+    nfs()
+if results.all_commands:
+    all_commands()
+
+if results.get_methods:
+    usefulmethods()
+if results.get_links:
+    usefullinks()
+
+if results.flush_db:
+    flush_recon_db()
+if results.getrawips:
+    get_subdomain_ip(results.domain)
+if results.install_template:
+    url = 'https://411hall.github.io/assets/files/CTF_template.ctb'
+    wget_check(url)
+if results.getsubs:
+    get_subdomains(results.domain)
+if results.crtsh:
+    cert_search(results.domain)
