@@ -37,9 +37,9 @@ sql_commands = [
     ["nmap", c("nmap -sV -Pn -vv -script=mysql* $ip -p 3306"), "sql vuln scan"],
     ["nmap", c("./prog_docs/sql_nmap $ip"), "nmap mysql command"],
     ["sqlmap", c("./prog_docs/sql_map"), "echoe's example usage"],
-    ["metasploit", c("./prog_docs/mssql_enum_ms.sh $ip"), "runs ms-sql scanner in metasploit"],
-    ["bruteforce", c("./prog_docs/bash_scripts/mssql_login_ms.sh"), "runs metasploits aux brute force programs"],
-    ["bruteforce", c("./prog_docs/bash_scripts/hydra_bf.sh"), "echo's example of usage"],
+    ["metasploit", c("./prog_docs/bashscripts/mssql_enum_ms.sh $ip"), "runs ms-sql scanner in metasploit"],
+    ["bruteforce", c("./prog_docs/bashscripts/mssql_login_ms.sh $ip"), "runs metasploits aux brute force programs"],
+    ["bruteforce", c("./prog_docs/bashscripts/hydra_bf.sh $ip"), "echo's example of usage"],
     ["bruteforce",c("sqlmap -u 'http://$ip/?query' --data='user=foo&pass=bar&submit=Login' --level=5 --risk=3 --dbms=mysql"), "sqlmaps for query"],
 
 ]
@@ -132,8 +132,8 @@ smb = [
     ['smb', c('nmblookup -A $ip'), 'tries to communicate with smb port'],
     ["metasploit", c("./prog_docs/smb_version_ms.sh $ip"), "metasploit auxilary module to crack username and password"],
     ["metasploit", c("./prog_docs/smb_multi_ms.sh $ip"), "metasploit multi-exploit"],
-    ["bash", c("./prog_files/smb_enum.sh $ip"), "located in /prog_files; SMB Enumeration using nmap"],
-    ["bash", c("./prog_files/smb_version.sh $ip"), "located in /prog_files; checks smb version"],
+    ["bash", c("./prog_files/bashscripts/smb_enum.sh $ip"), "located in /prog_files; SMB Enumeration using nmap"],
+    ["bash", c("./prog_files/bashscripts/smb_version.sh $ip"), "located in /prog_files; checks smb version"],
     [wrap_in_green("SMB MAP"), "", ""],
     ["smb", c("enum4linux -a $ip"), "perl script to enumerate names on smb port"],
     ["smb", c("smbmap -H $ip"), "maps out smb ports for given $ip"],
