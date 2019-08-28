@@ -204,6 +204,10 @@ def web_app():
     make_table(txt.web_app_commands, "Web App Commands")
 
 
+def sql():
+    make_table(txt.sql_commands, "SQL Commands")
+
+
 def all_commands():
     for table in txt.all_commands:
         make_table(table, "commands")
@@ -216,6 +220,8 @@ parser.add_argument('-pk', '--packages', action='store_true', dest='git_packages
 
 
 parser.add_argument('-wa', '--web-app', action='store_true', dest='web_app', default=False, help="show web-app commands")
+parser.add_argument('-sq', '--sql', action='store_true', dest='sql', default=False, help="show web-app commands")
+
 parser.add_argument('-nm', '--nmap', action='store_true', dest='nmap', default=False, help="show nmap commands")
 parser.add_argument('-dn', '--dns', action='store_true', dest='dns', default=False, help="shows all dns commands")
 parser.add_argument('-sb', '--smb', action='store_true', dest='smb', default=False, help="shows all smb commands")
@@ -255,6 +261,8 @@ if results.git_packages:
     useful_packages()
 ##############################
 # COMMANDS
+if results.sql:
+    sql()
 if results.web_app:
     web_app()
 if results.nmap:

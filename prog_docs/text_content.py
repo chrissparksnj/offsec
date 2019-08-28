@@ -19,17 +19,25 @@ web_app_commands = [
     [wrap_in_green("WEB APP COMMANDS"), "command", "command_description"],
     ["scan", c("nikto -h $ip"), "runs nikto against target ip"],
     ["scan", c("nikto -h $ip -p 80,8080,1234"), "runs nikto on different ports"],
+    ["scan", c("nikto -host http://$ip"), "runs nikto scan with -host option"],
     ["discover", c("wfuzz -c -z file,fastlists/directory-list-2.3-medium.txt --sc 200 http://$ip/FUZZ"), "brute force discovery"],
     ["discover", c("gobuster -u http://$ip/ -w fastlists/common.txt -s '200,204,301,302,307,403,500' -e"), "brute force discovery"],
     ["discover", c("gobuster -u http://$ip/ -w fastlists/CGIs.txt -s '200,204,403,500' -e"), "brute force CGI"],
     ["discover", c("whatweb $ip"), "identifies all known services"],
     ["nmap", c("nmap --script http-methods --script-args http-methods.url-path='/test' $ip"), "tests allowed methods"],
-    ["nmap"],
+    ["nmap", c("nmap --script=http-vuln* $ip "), "checks http vulns"],
+    ["nmap", c("nmap -v -p 80 --script=http-vuln-cve2010-2861 $ip"), "test for coldfusion"],
     ['bruteforce', c('hydra -U http-post-form'), "what does module do?"],
     ["bruteforce", c("hydra 10.0.0.1 http-post-form '/admin.php:target=auth&mode=login&user=^USER^&password=^PASS^:invalid' -P fastlists/rockyou.txt -l admin")],
-    ["scan", c("nikto -host http://$ip"), "runs nikto scan with -host option"]
-
+    ["bruteforce", c("sqlmap -u 'http://$ip/?query' --data='user=foo&pass=bar&submit=Login' --level=5 --risk=3 --dbms=mysql"), "sqlmaps for query"],
+    ["bruteforce", c("hydra -l user -P /usr/share/wordlists/rockyou.txt -f $ip http-get /path"), "basic get auth"]
 ]
+
+sql_commands = [
+    ["nmap", c("nmap -sV -Pn -vv --script=mysql-audit,mysql-databases,mysql-dump-hashes,mysql-empty-password,mysql-enum,mysql-info,mysql-query,mysql-users,mysql-variables,mysql-vuln-cve2012-2122 $ip -p 3306")]
+]
+
+
 git_commands = [
     ['program name', 'program link', 'program_instructions'],
     ["enum4linux", c("https://github.com/portcullislabs/enum4linux"), "apt install smbclient; git clone; ./enum4linux"],
