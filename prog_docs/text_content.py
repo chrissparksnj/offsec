@@ -27,18 +27,20 @@ web_app_commands = [
     ["nmap", c("nmap --script http-methods --script-args http-methods.url-path='/test' $ip"), "tests allowed methods"],
     ["nmap", c("nmap --script=http-vuln* $ip "), "checks http vulns"],
     ["nmap", c("nmap -v -p 80 --script=http-vuln-cve2010-2861 $ip"), "test for coldfusion"],
+    ["nmap", c("sudo nmap -sU --script=ms-sql-info $ip"), "nmap to get info"],
     ['bruteforce', c('hydra -U http-post-form'), "what does module do?"],
-    ["bruteforce", c("./prog_docs/bash_scripts/hydra_bf.sh"), "echo's example of usage"],
-    ["bruteforce", c("sqlmap -u 'http://$ip/?query' --data='user=foo&pass=bar&submit=Login' --level=5 --risk=3 --dbms=mysql"), "sqlmaps for query"],
     ["bruteforce", c("hydra -l user -P /usr/share/wordlists/rockyou.txt -f $ip http-get /path"), "basic get auth"]
 ]
 
 sql_commands = [
     [wrap_in_green("SQL COMMANDS"), "command", "command_description"],
-    ["nmap", c("./prog_docs/sql_nmap $ip"), "nmap mysql command"],
     ["nmap", c("nmap -sV -Pn -vv -script=mysql* $ip -p 3306"), "sql vuln scan"],
+    ["nmap", c("./prog_docs/sql_nmap $ip"), "nmap mysql command"],
     ["sqlmap", c("./prog_docs/sql_map"), "echoe's example usage"],
-    ["metasploit", c("./prog_docs/mssql_enum_ms.sh $ip"), "runs ms-sql scanner in metasploit"]
+    ["metasploit", c("./prog_docs/mssql_enum_ms.sh $ip"), "runs ms-sql scanner in metasploit"],
+    ["bruteforce", c("./prog_docs/bash_scripts/mssql_login_ms.sh"), "runs metasploits aux brute force programs"],
+    ["bruteforce", c("./prog_docs/bash_scripts/hydra_bf.sh"), "echo's example of usage"],
+    ["bruteforce",c("sqlmap -u 'http://$ip/?query' --data='user=foo&pass=bar&submit=Login' --level=5 --risk=3 --dbms=mysql"), "sqlmaps for query"],
 
 ]
 
