@@ -120,16 +120,16 @@ For example, look at the `nmap` table.
 
 ```
 nmap = [
-    [wrap_in_green("NMAP COMMANDS"), "command", "command_description"],
-    ["nmap", c("nmap -Pn -sC -sV -oA tcp -vv $ip"), "tcp top 1000"],
-    ["nmap", c("nmap -Pn -sC -sV -oA all -vv -p- $ip"), "gets all ports for target $ip"],
-    ["nmap", c("nmap -Pn -sU --top-ports 100 -oA udp -vv $ip"), "udp top 100"],
-    ["nmap", c("locate .nse | grep ftp"), "Find script related to a service your interested in"],
-    ["nmap", c("nmap --script-help ftp-anon"), "what does a script do?"]
+        [wrap_in_green("NMAP COMMANDS"), "command", "command_description"],
+        ["nmap", c("nmap -Pn -sC -sV -oA tcp -vv $ip"), "tcp top 1000"],
+        ["nmap", c("nmap -Pn -sC -sV -oA all -vv -p- $ip"), "gets all ports for target $ip"],
+        ["nmap", c("nmap -Pn -sU --top-ports 100 -oA udp -vv $ip"), "udp top 100"],
+        ["nmap", c("locate .nse | grep ftp"), "Find script related to a service your interested in"],
+        ["nmap", c("nmap --script-help ftp-anon"), "what does a script do?"]
     ]
 ```
 
-You'd add a topic tag, like `nmap`, wrap the actual command in c(""), then a small description.
+You'd add a topic tag, like `nmap`, wrap the actual command in c(""), then a add a small description.
 
 Here is some psuedocode.
 
