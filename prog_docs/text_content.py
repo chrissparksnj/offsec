@@ -197,7 +197,11 @@ smtp_commands = [
     ["web", c("nmap --script=smtp-* -p 25 $ip"), "nmap smtp"],
     ["web", c("hydra -P wordlistsnmap.lst $ip smtp -V"), "hydra for smtp"],
     ["web", c("./prog_docs/bashscripts/test_open_relay.sh"), "tests ip for open relay"],
-    ["email_enum", c(''), ""]
+    ["email_enum", c('./smtp-user-enum.pl -M VRFY -U fastlists/unix_users.txt -t $ip'), "enumerate users with list"],
+    ["email_enum", c("./smtp-user-enum.pl -M VRFY -u root -t $ip"), "verifies single user against mailserver"],
+    ["email_enum", c("./smtp-user-enum.pl -M VRFY -u root -t $ip"), "ask the server if a user belongs to a mailing list"],
+    ["nmap", c("./prog_docs/bashscripts/smtp_vuln_nmap.sh"), "runs nmap scan for all smtp vulns"]
+
 ]
 
 all_commands = [
