@@ -137,3 +137,7 @@ Here is some psuedocode.
 new_item = ["nmap", c("nmap -sA $ip"), "firewall detection"]
 nmap.append(new_item)
 ```
+
+I will make a `helper.py` script to automate this process.
+
+But for now, you can manually edit the `/prog_docs/text_content`
