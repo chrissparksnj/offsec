@@ -201,7 +201,7 @@ smtp_commands = [
     ["email_enum", c("./smtp-user-enum.pl -M VRFY -u root -t $ip"), "verifies single user against mailserver"],
     ["email_enum", c("./smtp-user-enum.pl -M VRFY -u root -t $ip"), "ask the server if a user belongs to a mailing list"],
     ["nmap", c("./prog_docs/bashscripts/smtp_vuln_nmap.sh"), "runs nmap scan for all smtp vulns"],
-    ["metasploit", "./prog_docs/bashscripts/smtp_enum_ms.sh", "uses metasploit aux module to enumerate smtp users"],
+    ["metasploit", c("./prog_docs/bashscripts/smtp_enum_ms.sh"), "uses metasploit aux module to enumerate smtp users"],
 
 
 ]
