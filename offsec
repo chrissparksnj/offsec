@@ -208,6 +208,10 @@ def sql():
     make_table(txt.sql_commands, "SQL Commands")
 
 
+def rpc():
+    make_table(txt.rpc, "RPC Commands")
+
+
 def all_commands():
     for table in txt.all_commands:
         make_table(table, "commands")
@@ -221,7 +225,7 @@ parser.add_argument('-pk', '--packages', action='store_true', dest='git_packages
 
 parser.add_argument('-wa', '--web-app', action='store_true', dest='web_app', default=False, help="show web-app commands")
 parser.add_argument('-sq', '--sql', action='store_true', dest='sql', default=False, help="show web-app commands")
-
+parser.add_argument('-rp', '--rpc', action='store_true', dest='rpc', default=False, help="show rpc commands")
 parser.add_argument('-nm', '--nmap', action='store_true', dest='nmap', default=False, help="show nmap commands")
 parser.add_argument('-dn', '--dns', action='store_true', dest='dns', default=False, help="shows all dns commands")
 parser.add_argument('-sb', '--smb', action='store_true', dest='smb', default=False, help="shows all smb commands")
@@ -231,25 +235,15 @@ parser.add_argument('-ft', '--ftp', action='store_true', dest='ftp', default=Fal
 parser.add_argument('-sl', '--ssl', action='store_true', dest='ssl', default=False, help="shows all ssl commands")
 parser.add_argument('-sm', "--smtp", action='store_true', dest='smtp', default=False, help="shows all smtp commands")
 parser.add_argument('-nf', '--nfs', action='store_true', dest="nfs", default=False, help="show all nfs commands")
-parser.add_argument('-a', "--all", action='store_true', dest='all_commands', default=False,
-                    help="shows all smtp commands")
-parser.add_argument('-gm', '--get-modules', action='store_true', dest='get_methods', default=False,
-                    help="shows methodology offered within the tutorial")
-parser.add_argument('-ul', '--useful-links', action="store_true", dest="get_links", default=False,
-                    help="shows useful link")
-parser.add_argument('-it', action='store_true', dest='install_template', default=False,
-                    help="install a standardized template to your home directory")
-
-parser.add_argument('-fl', '--fast-lists', action='store_true', dest='fast_list', default=False,
-                    help="get lists that are usefule, fast!")
-parser.add_argument('--crt-search', action='store_true', dest='crtsh', default=False,
-                    help="use crt.sh to find subdomains")
-parser.add_argument("--flush-db", action='store_true', dest='flush_db', default=False,
-                    help="flush the recon-ng database")
-parser.add_argument('--subdomains', action='store_true', dest='getsubs', default=False,
-                    help="use recon-ng to get a list of subdomains")
-parser.add_argument("--raw-ip", action='store_true', dest='getrawips', default=False,
-                    help="get raw ip addresses of subdomains")
+parser.add_argument('-a', "--all", action='store_true', dest='all_commands', default=False, help="shows all smtp commands")
+parser.add_argument('-gm', '--get-modules', action='store_true', dest='get_methods', default=False, help="shows methodology offered within the tutorial")
+parser.add_argument('-ul', '--useful-links', action="store_true", dest="get_links", default=False, help="shows useful link")
+parser.add_argument('-it', action='store_true', dest='install_template', default=False, help="install a standardized template to your home directory")
+parser.add_argument('-fl', '--fast-lists', action='store_true', dest='fast_list', default=False, help="get lists that are usefule, fast!")
+parser.add_argument('--crt-search', action='store_true', dest='crtsh', default=False, help="use crt.sh to find subdomains")
+parser.add_argument("--flush-db", action='store_true', dest='flush_db', default=False, help="flush the recon-ng database")
+parser.add_argument('--subdomains', action='store_true', dest='getsubs', default=False, help="use recon-ng to get a list of subdomains")
+parser.add_argument("--raw-ip", action='store_true', dest='getrawips', default=False, help="get raw ip addresses of subdomains")
 parser.add_argument('--domain', action='store', dest='domain', help='the target domain')
 parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
@@ -261,6 +255,8 @@ if results.git_packages:
     useful_packages()
 ##############################
 # COMMANDS
+if results.rpc:
+    rpc()
 if results.sql:
     sql()
 if results.web_app:

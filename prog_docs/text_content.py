@@ -202,10 +202,17 @@ smtp_commands = [
     ["email_enum", c("./smtp-user-enum.pl -M VRFY -u root -t $ip"), "ask the server if a user belongs to a mailing list"],
     ["nmap", c("./prog_docs/bashscripts/smtp_vuln_nmap.sh"), "runs nmap scan for all smtp vulns"],
     ["metasploit", c("./prog_docs/bashscripts/smtp_enum_ms.sh"), "uses metasploit aux module to enumerate smtp users"],
-    ["hydra", c("hydra -P fastlists/passwords.lst $ip smtp -V"), "attempts smtp brute force"],
-
-
+    ["hydra", c("hydra -P fastlists/passwords.lst -L fastlists/unix_users.txt $ip smtp -V"), "attempts smtp brute force"],
 ]
+
+rpc = [
+    [wrap_in_green("RPC COMMANDS"),"command", "description"],
+    ["nmap", c("nmap -sV -p 111,445 $ip"), "nmap command to detect rpc services"],
+    ["nmap", c("nmap $ip --script=msrpc-enum"), "nmap to expose NFS"],
+    ["rpc", c("rpcinfo -p $ip"), "shows if any NFS mount exposed"],
+    ["metasploit", c("msf > use exploit/windows/dcerpc/ms03_026_dcom"), "use metasploit module"]
+]
+
 
 all_commands = [
     nmap, dns, smb, enum_scripts, ssh_commands, ftp_commands, ssl, smtp_commands
