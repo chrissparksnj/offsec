@@ -110,5 +110,30 @@ python opsec_auto.py --web-app
 | bruteforce       | hydra -U http-post-form                                                             | what does module do?              |
 | bruteforce       | hydra -l user -P /usr/share/wordlists/rockyou.txt -f $ip http-get /path             | basic get auth                    |
 +------------------+-------------------------------------------------------------------------------------+-----------------------------------+
+```
 
+# How To Contribute
+
+All commands and information are stored in `/prog_docs/text_content.py`.
+
+For example, look at the `nmap` table.
+
+```
+nmap = [
+    [wrap_in_green("NMAP COMMANDS"), "command", "command_description"],
+    ["nmap", c("nmap -Pn -sC -sV -oA tcp -vv $ip"), "tcp top 1000"],
+    ["nmap", c("nmap -Pn -sC -sV -oA all -vv -p- $ip"), "gets all ports for target $ip"],
+    ["nmap", c("nmap -Pn -sU --top-ports 100 -oA udp -vv $ip"), "udp top 100"],
+    ["nmap", c("locate .nse | grep ftp"), "Find script related to a service your interested in"],
+    ["nmap", c("nmap --script-help ftp-anon"), "what does a script do?"]
+    ]
+```
+
+You'd add a topic tag, like `nmap`, wrap the actual command in c(""), then a small description.
+
+Here is some psuedocode.
+
+```
+new_item = ["nmap", c("nmap -sA $ip"), "firewall detection"]
+nmap.append(new_item)
 ```
