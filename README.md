@@ -114,7 +114,7 @@ python opsec_auto.py --web-app
 
 # How To Contribute
 
-All commands and information are stored in `/prog_docs/text_content.py`.
+All commands are stored in `/prog_docs/text_content.py`.
 
 For example, look at the `nmap` table.
 
