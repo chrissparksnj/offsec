@@ -44,7 +44,7 @@ optional arguments:
 ```
 
 
-### Example Usage
+# Example Usage
 ### Get interesting packages
 
 ```
