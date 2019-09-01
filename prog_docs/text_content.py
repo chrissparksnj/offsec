@@ -66,16 +66,16 @@ git_commands = [
     ["medusa", c("medusa"), "apt-get install medusa"],
     ["nbtscan", c("nbtscan"), "sudo apt-get install nbtscan"],
     ["nikto", c("nikto"), "sudo apt-get install nikto"],
-    ["golang", c("go lang"), "apt-get install go;add-apt-repository ppa:longsleep/golang-backports; apt-get update"],
+    ["golang", c("go lang"), "apt-get install go;add-apt-repository ppa:longsleep/golang-backports; "],
     ["gobuster", c("gobuster"), "go get github.com/OJ/gobuster"],
     ["proxychains", c("proxychains"), "sudo apt-get install proxychains"],
     ["tor", c("tor"), "sudo apt-get install tor"],
     ["smtp-user-enum", c("git clone https://github.com/pentestmonkey/smtp-user-enum.git"), "enumerates email users"],
-    ["40136", c("https://raw.githubusercontent.com/offensive-security/exploitdb/master/exploits/linux/remote/40136.py"),
-     "wget, paramiko"],
     ["nfs-common", c("nfs-common"), "sudo apt install nfs-common"],
-    ["whatweb", c("whatweb"), "sudo apt install whatweb"]
-]
+    ["whatweb", c("whatweb"), "sudo apt install whatweb"],
+    ["onesixtyone", c("onesixtyone"), "sudo apt install onesixtyone"]
+
+    ]
 
 fastlists = [
     ['source', 'name', 'uses'],
@@ -179,11 +179,14 @@ ssh_commands = [
 ftp_commands = [
     [wrap_in_green("FTP COMMANDS"), "command", "description"],
     ["ftp", c("--script=ftp-anon,ftp-bounce,ftp-libopie,ftp-proftpd-backdoor -p1 $ip"),"runs ftp scripts with nmap"],
-    ["ftp", c("--script=ftp-vsftpd-backdoor,ftp-vuln-cve2010-4221,tftp-enum -p21 $ip"),
-    "runs ftp scripts with nmap"],
+    ["ftp", c("--script=ftp-vsftpd-backdoor,ftp-vuln-cve2010-4221,tftp-enum -p21 $ip"),"runs ftp scripts with nmap"],
     ["ftp", c("nmap --script=ftp-* -p 21 $ip"), "runs ftp vulnerability scan"],
     ["ftp", c("hydra -l user -P /usr/share/john/password.lst ftp://$ip:21"), "brute force ftp"],
     ["ftp", c('use auxiliary/scanner/ftp/ftp_login'), "uses metasploit to brute force login"],
+    ["tftp", c("nmap -sU -p 69 --script tftp-enum.nse $ip"), "nmap tftp server discovery"],
+    ["tftp", c("./prog_docs/bashscripts/tftp_discover_ms.sh"), "metasploit discovery for tftp server"],
+	["tftp", c("cat prog_docs/info/tftp_upload.txt"), "tftp instructions on how to upload php shell"],
+
     ]
 
 ssl = [
@@ -203,6 +206,7 @@ smtp_commands = [
     ["nmap", c("./prog_docs/bashscripts/smtp_vuln_nmap.sh"), "runs nmap scan for all smtp vulns"],
     ["metasploit", c("./prog_docs/bashscripts/smtp_enum_ms.sh"), "uses metasploit aux module to enumerate smtp users"],
     ["hydra", c("hydra -P fastlists/passwords.lst -L fastlists/unix_users.txt $ip smtp -V"), "attempts smtp brute force"],
+    ["pop3", c("cat prog_docs/info/pop_3.txt"), "tests server for POP3"]
 ]
 
 rpc = [

