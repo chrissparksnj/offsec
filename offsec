@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-
+import sqlite3
 import argparse
 import socket
 import prog_docs.text_content as txt
@@ -11,17 +11,30 @@ import wget
 import os
 from terminaltables import AsciiTable
 
-#
+
 platform = sys.platform
 if platform == "win32":
     import colorama
-
     colorama.init()
 
+
+def get_module(mod):
+	conn = sqlite3.connect('offsec.db')
+	cur = conn.cursor()
+	cur.execute("SELECT * FROM commands WHERE mod_name = ?", (mod,))
+	rows = cur.fetchall()
+	return rows
+
+
+
+def connect_db():
+	conn = sqlite3.connect('offsec.db')
 
 def remove_color(string):
     b = string[5:-4]
     return b
+
+
 
 
 def debug_object(obj):
@@ -249,12 +262,12 @@ parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
 results = parser.parse_args()
 
+connect_db()
+
 if results.fast_list:
     fast_lists()
 if results.git_packages:
     useful_packages()
-##############################
-# COMMANDS
 if results.rpc:
     rpc()
 if results.sql:
@@ -298,3 +311,5 @@ if results.getsubs:
     get_subdomains(results.domain)
 if results.crtsh:
     cert_search(results.domain)
+
+#make_table(get_module("nmap"), "nmap")
