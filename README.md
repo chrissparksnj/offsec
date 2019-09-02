@@ -118,7 +118,7 @@ All commands are now stored in a SQLITE3 database.
 
 The helper script, `/helpers/add_command.py` will walk you through a wizard on what to do.
 
-When you run the script by executing 'python add_command.py' you will be greeted with the following outputs.
+When you run the script by executing `python add_command.py` you will be greeted with the following outputs.
 
 
 ```
