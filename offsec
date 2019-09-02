@@ -10,7 +10,6 @@ import inspect
 import wget
 import os
 from terminaltables import AsciiTable
-import bcolors as clr
 from colorama import Fore, Back, Style, init
 init(autoreset=True)
 '''
