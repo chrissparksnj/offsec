@@ -2,7 +2,6 @@
 import sqlite3
 import argparse
 import socket
-import prog_docs.text_content as txt
 import subprocess
 import sys
 import pprint
