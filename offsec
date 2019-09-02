@@ -73,10 +73,8 @@ def get_module(mod):
 
 
 def make_table(data, title, inner=None):
-    data_array = []
-    for item in data:
-        data_array.append(item)
-    data_array.append(item)
+    '''termtables takes list of lists, or list of tuples'''
+    data_array = data
     table = AsciiTable(data_array, title=title)
     if inner:
         table.inner_row_border = True
@@ -128,10 +126,17 @@ def sql():
 def rpc():
     get_module("rpc")
 
+def shellshock():
+    get_module("shellshock")
+
+def rdp():
+    get_module("rdp")
+
 def all_commands():
     get_all_modules(fit=True)
 
 parser = argparse.ArgumentParser(description="Commands from guide.offsecnewbie.com tutorial")
+parser.add_argument('-ss', '--shellshock', action='store_true', dest="shellshock", default=False, help="show shell shock scripts")
 parser.add_argument('-pk', '--packages', action='store_true', dest='git_packages', default=False,help='show interesting packages and their install instructions')
 parser.add_argument('-wa', '--web-app', action='store_true', dest='web_app', default=False, help="show web-app commands")
 parser.add_argument('-sq', '--sql', action='store_true', dest='sql', default=False, help="show web-app commands")
@@ -150,6 +155,7 @@ parser.add_argument('-gm', '--get-modules', action='store_true', dest='get_metho
 parser.add_argument('-ul', '--useful-links', action="store_true", dest="get_links", default=False, help="shows useful link")
 parser.add_argument('-it', action='store_true', dest='install_template', default=False, help="install a standardized template to your home directory")
 parser.add_argument('-fl', '--fast-lists', action='store_true', dest='fast_list', default=False, help="get lists that are usefule, fast!")
+parser.add_argument('-rd', '--rdp', action='store_true', dest='rdp', default=False, help='RDP Commands')
 parser.add_argument('--crt-search', action='store_true', dest='crtsh', default=False, help="use crt.sh to find subdomains")
 parser.add_argument("--flush-db", action='store_true', dest='flush_db', default=False, help="flush the recon-ng database")
 parser.add_argument('--subdomains', action='store_true', dest='getsubs', default=False, help="use recon-ng to get a list of subdomains")
@@ -159,7 +165,10 @@ parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
 results = parser.parse_args()
 
-
+if results.rdp:
+    rdp()
+if results.shellshock:
+    shellshock()
 if results.fast_list:
     fast_lists()
 if results.git_packages:
