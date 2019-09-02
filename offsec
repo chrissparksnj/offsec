@@ -10,143 +10,74 @@ import inspect
 import wget
 import os
 from terminaltables import AsciiTable
+import bcolors as clr
+from colorama import Fore, Back, Style, init
+init(autoreset=True)
+'''
+pks
+nmap
+enum
+smtp
+lists
+ssl
+rpc
+ssh
+sql
+ftp
+nfs
+dns
+smb
+'''
 
+def red(string):
+    return Style.BRIGHT + Fore.RED + string.upper() + Fore.RESET + Style.RESET_ALL
 
 platform = sys.platform
 if platform == "win32":
     import colorama
     colorama.init()
 
-
-def get_module(mod):
-	conn = sqlite3.connect('offsec.db')
-	cur = conn.cursor()
-	cur.execute("SELECT * FROM commands WHERE mod_name = ?", (mod,))
-	rows = cur.fetchall()
-	return rows
-
-
-
-def connect_db():
-	conn = sqlite3.connect('offsec.db')
-
 def remove_color(string):
     b = string[5:-4]
     return b
 
+def colorize_tuple(t):
+    lst = list(t)
+    lst[1] = clr.OKGREEN + lst[1] + clr.ENDC 
+    return tuple(lst)
 
-
-
-def debug_object(obj):
-    for i in obj.__dict__.iteritems():
-        print str(type(obj)) + str(i)
-
-
-def get_object_attributes(obj):
-    attributes = inspect.getmembers(obj, lambda a: not (inspect.isroutine(a)))
-    list_of_attributes = [a for a in attributes if not (a[0].startswith('__') and a[0].endswith('__'))]
-    return list_of_attributes
-
-
-def debug_parser(parser):
-    for i in parser.__dict__.iteritems():
-        pprint.pprint(i)
-
-
-def wget_check(url):
-    try:
-        check_wget = wget.download("https://411hall.github.io/assets/files/CTF_template.ctb")
-        print "\nDownloaded CherryTree template to " + os.getcwd()
-    except Exception, e:
-        print e
-
-
-def get_subdomains(domain):
-    try:
-        file_command = "FILENAME=" + os.getcwd() + "/text-files/subdomains.txt"
-        source = "source=" + domain
-        subprocess.call(['recon-cli', "-m", "recon/domains-hosts/hackertarget", "-o", source, "-c", "run"])
-        subprocess.call(
-            ["sudo", "recon-cli", "-m", "reporting/list", "-o", "COLUMN=host", "-o", file_command, "-c", "run"])
-    except Exception, e:
-        print e
-
-
-def get_subdomain_ip(domain):
-    file_command = "FILENAME=" + os.getcwd() + "/text-files/ip_of_subdomain_ips.txt"
-    source = "source=" + domain
-    subprocess.call(['recon-cli', "-m", "recon/domains-hosts/hackertarget", "-o", source, "-c", "run"])
-    subprocess.call(
-        ["sudo", "recon-cli", "-m", "reporting/list", "-o", "COLUMN=ip_address", "-o", file_command, "-c", "run"])
-
-
-def flush_recon_db():
-    try:
-        subprocess.call(["recon-cli", "-C", "query delete from hosts"])
-    except Exception, e:
-        print e
-
-
-def check_if_installed(prog):
-    try:
-        subprocess.call([prog], stderr=open(os.devnull, 'wb'))
-        print "[+] " + str(prog) + " installed."
-        return True
-    except Exception, e:
-        if e.errno == errno.ENOENT:
-            return False
-        else:
-            return e
-
-
-def cert_search(domain):
-    installed = check_if_installed('curl')
-    if installed:
-        filename = "text-files/" + domain + "-ca-certs.txt"
-        f = open(filename, 'w+')
-        subprocess.call(["prog_docs/crt.sh", domain, "|", "sort", "|", "uniq"], stdout=f)
-        f.close()
-        subprocess.call(['cat', filename])
-        print "[+] File saved to: " + filename
+def get_all_modules(fit=False):
+    conn = sqlite3.connect('offsec.db')
+    cur = conn.cursor()
+    if fit:
+        cur.execute("SELECT id, command, description from commands")
+        rows = [(red("id"), red("command"), red("description"))]
     else:
-        print "CURL not installed or incorrectly configured"
+        cur.execute("SELECT topic, command, description FROM commands")
+        rows = [(red("topic"), red("command"), red("description"))]
+    results = cur.fetchall()
+    for tup in results:
+        rows.append(tup)
+    make_table(rows, "all")
 
 
-def usefullinks():
-    data_array = [['link', 'description'], ]
-    for link in txt.useful_links:
-        list_single = link.split('-->')
-        list_single[0].replace(' ', '')
-        list_single[0].strip()
-        data_array.append(list_single)
-
-    table = AsciiTable(data_array)
-    print table.table
-
-
-def usefulcommands():
-    data_array = [['command', 'description']]
-    for command in txt.commands:
-        list_single = command.split('-->')
-        data_array.append(list_single)
-    table = AsciiTable(data_array)
-    print table.table
+def get_module(mod):
+    conn = sqlite3.connect('offsec.db')
+    cur = conn.cursor()
+    cur.execute("SELECT topic, command, description FROM commands WHERE mod_name = ?", (mod,))
+    rows = [(red("topic"), red("command"), red("description"))]
+    results = cur.fetchall()
+    for tup in results:
+        rows.append(tup)
+    make_table(rows, mod)
 
 
-def networking_commands():
-    make_table(txt.networking_commands, "Networking Commands")
-
-
-# data_array = []
-# for command in txt.networking_commands:
-#	data_array.append(command)
-# table = AsciiTable(data_array, title="Networking Commands")
-# print table.table
 
 def make_table(data, title, inner=None):
     data_array = []
     for item in data:
         data_array.append(item)
+    data_array.append(item)
     table = AsciiTable(data_array, title=title)
     if inner:
         table.inner_row_border = True
@@ -154,88 +85,55 @@ def make_table(data, title, inner=None):
 
 
 def useful_packages():
-    data_array = []
-    for package in txt.git_commands:
-        data_array.append(package)
-    table = AsciiTable(data_array, title="Git Packages")
-    print table.table
-
-
-def run_command(command):
-    for i in txt.networking_commands:
-        if i[0] == command:
-            run = i[1]
-            run = run[9:-4]
-            print run
-            subprocess.call(run, shell=True)
-
+    get_module("pks")
 
 def usefulmethods():
     make_table(txt.methods, "Methodology", "True")
 
-
 def nmap():
-    make_table(txt.nmap, 'NMAP Commands')
-
+    get_module("nmap")
 
 def dns():
-    make_table(txt.dns, 'DNS Commands')
-
+    get_module("dns")
 
 def smb():
-    make_table(txt.smb, "SMB Commands")
-
+    get_module("smb")
 
 def fast_lists():
-    make_table(txt.fastlists, 'fast lists')
-
+    get_module("lists")
 
 def enum():
-    make_table(txt.enum_scripts, 'Enumeration Scripts')
-
+    get_module("enum")
 
 def ssh():
-    make_table(txt.ssh_commands, "SSH Commands")
-
+    get_module("ssh")
 
 def ftp():
-    make_table(txt.ftp_commands, "FTP Commands")
-
+    get_module("ftp")
 
 def ssl():
-    make_table(txt.ssl, "SSL commands")
-
+    get_module("ssl")
 
 def smtp():
-    make_table(txt.smtp_commands, "SMTP commands")
-
+    get_module("smtp")
 
 def nfs():
-    make_table(txt.nfs_commands, "NFS commands")
+    get_module("nfs")
 
 def web_app():
-    make_table(txt.web_app_commands, "Web App Commands")
-
+    get_module("web_apps")
 
 def sql():
-    make_table(txt.sql_commands, "SQL Commands")
-
+    get_module("sql")
 
 def rpc():
-    make_table(txt.rpc, "RPC Commands")
-
+    get_module("rpc")
 
 def all_commands():
-    for table in txt.all_commands:
-        make_table(table, "commands")
+    get_all_modules(fit=True)
 
-
-parser = argparse.ArgumentParser(
-    description="Automatically spin up everything from the guide.offsecnewbie.com walk through")
-parser.add_argument('-pk', '--packages', action='store_true', dest='git_packages', default=False,
-                    help='show interesting packages and their install instructions')
-
-
+parser = argparse.ArgumentParser(description="Commands from guide.offsecnewbie.com tutorial")
+parser.add_argument('-pk', '--packages', action='store_true', dest='git_packages', default=False,help='show interesting packages and their install instructions')
 parser.add_argument('-wa', '--web-app', action='store_true', dest='web_app', default=False, help="show web-app commands")
 parser.add_argument('-sq', '--sql', action='store_true', dest='sql', default=False, help="show web-app commands")
 parser.add_argument('-rp', '--rpc', action='store_true', dest='rpc', default=False, help="show rpc commands")
@@ -262,7 +160,6 @@ parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
 results = parser.parse_args()
 
-connect_db()
 
 if results.fast_list:
     fast_lists()
@@ -294,12 +191,10 @@ if results.nfs:
     nfs()
 if results.all_commands:
     all_commands()
-
 if results.get_methods:
     usefulmethods()
 if results.get_links:
     usefullinks()
-
 if results.flush_db:
     flush_recon_db()
 if results.getrawips:
@@ -312,4 +207,3 @@ if results.getsubs:
 if results.crtsh:
     cert_search(results.domain)
 
-#make_table(get_module("nmap"), "nmap")
