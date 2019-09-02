@@ -114,30 +114,37 @@ python opsec_auto.py --web-app
 
 # How To Contribute
 
-All commands are stored in `/prog_docs/text_content.py`.
+All commands are now stored in a SQLITE3 database. 
 
-For example, look at the `nmap` table.
+The helper script, `/helpers/add_command.py` will walk you through a wizard on what to do.
 
-```
-nmap = [
-        [wrap_in_green("NMAP COMMANDS"), "command", "command_description"],
-        ["nmap", c("nmap -Pn -sC -sV -oA tcp -vv $ip"), "tcp top 1000"],
-        ["nmap", c("nmap -Pn -sC -sV -oA all -vv -p- $ip"), "gets all ports for target $ip"],
-        ["nmap", c("nmap -Pn -sU --top-ports 100 -oA udp -vv $ip"), "udp top 100"],
-        ["nmap", c("locate .nse | grep ftp"), "Find script related to a service your interested in"],
-        ["nmap", c("nmap --script-help ftp-anon"), "what does a script do?"]
-    ]
-```
+When you run the script by executing 'python add_command.py' you will be greeted with the following outputs.
 
-You'd add a topic tag, like `nmap`, wrap the actual command in c(""), then a add a small description.
-
-Here is some psuedocode.
 
 ```
-new_item = ["nmap", c("nmap -sA $ip"), "firewall detection"]
-nmap.append(new_item)
+Choose a topic
+
+pks => PACKAGES
+nmap => NMAP COMMANDS
+enum => ENUMERATION SCRIPTS
+smtp => SMTP COMMANDS
+lists => FASTLISTS
+ssl => SSL COMMANDS
+rpc => RPC COMMANDS
+ssh => SSH SCRIPTS
+sql => SQL
+ftp => FTP SCRIPTS
+nfs => NFS COMMANDS
+dns => DNS COMMANDS
+shellshock => SHELL SHOCK SCRIPTS
+smb => SMB COMMANDS
+web_apps => WEBAPP COMMANDS
+
+>> nmap
+
+What's the command?: nmap -p- $ip
+
+What's it do?: finds all ports
+
+Inserted
 ```
-
-I will make a `helper.py` script to automate this process.
-
-But for now, you can manually edit the `/prog_docs/text_content.py` file.  :smile:
