@@ -32,7 +32,8 @@ all_commands = {"sql":"SQL",
         "smtp":"SMTP COMMANDS",
         "rpc":"RPC COMMANDS",
         "web_apps":"WEBAPP COMMANDS",
-        "shellshock": "SHELL SHOCK SCRIPTS"}
+        "shellshock": "SHELL SHOCK SCRIPTS",
+        "hc":"HELPER_COMMANDS"}
 
 def main():
     string = 'Choose a topic\n'

@@ -45,7 +45,8 @@ def colorize_tuple(t):
     return tuple(lst)
 
 def get_all_modules(fit=False):
-    conn = sqlite3.connect('offsec.db')
+    curdir = os.path.dirname(os.path.abspath(__file__))
+    conn = sqlite3.connect(curdir + '/offsec.db')
     cur = conn.cursor()
     if fit:
         cur.execute("SELECT id, command, description from commands")
@@ -60,7 +61,8 @@ def get_all_modules(fit=False):
 
 
 def get_module(mod):
-    conn = sqlite3.connect('offsec.db')
+    curdir = os.path.dirname(os.path.abspath(__file__))
+    conn = sqlite3.connect(curdir + '/offsec.db')
     cur = conn.cursor()
     cur.execute("SELECT topic, command, description FROM commands WHERE mod_name = ?", (mod,))
     rows = [(red("topic"), red("command"), red("description"))]
@@ -131,10 +133,14 @@ def shellshock():
 def rdp():
     get_module("rdp")
 
+def l_commands():
+    get_module("hc")
+
 def all_commands():
     get_all_modules(fit=True)
 
 parser = argparse.ArgumentParser(description="Commands from guide.offsecnewbie.com tutorial")
+parser.add_argument("-hc", "--helper_commands", action="store_true", dest="helpcommands", default=False, help="helper linux commands")
 parser.add_argument('-ss', '--shellshock', action='store_true', dest="shellshock", default=False, help="show shell shock scripts")
 parser.add_argument('-pk', '--packages', action='store_true', dest='git_packages', default=False,help='show interesting packages and their install instructions')
 parser.add_argument('-wa', '--web-app', action='store_true', dest='web_app', default=False, help="show web-app commands")
@@ -163,7 +169,8 @@ parser.add_argument('--domain', action='store', dest='domain', help='the target 
 parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
 results = parser.parse_args()
-
+if results.helpcommands:
+    l_commands()
 if results.rdp:
     rdp()
 if results.shellshock:
