@@ -39,7 +39,7 @@ def main():
     string = 'Choose a topic\n'
     for key, val in all_commands.iteritems():
         string += key + " => " + val + "\n"
-    string += ">> "
+    string += "Whats the topic?: "
     topic = raw_input(string)
     command = raw_input("What's the command?: ")
     description = raw_input("What's it do?: ")

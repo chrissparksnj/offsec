@@ -136,6 +136,9 @@ def rdp():
 def l_commands():
     get_module("hc")
 
+def linux_network():
+    get_module("linux_network")
+
 def all_commands():
     get_all_modules(fit=True)
 
@@ -161,6 +164,7 @@ parser.add_argument('-ul', '--useful-links', action="store_true", dest="get_link
 parser.add_argument('-it', action='store_true', dest='install_template', default=False, help="install a standardized template to your home directory")
 parser.add_argument('-fl', '--fast-lists', action='store_true', dest='fast_list', default=False, help="get lists that are usefule, fast!")
 parser.add_argument('-rd', '--rdp', action='store_true', dest='rdp', default=False, help='RDP Commands')
+parser.add_argument('-ln', '--linux_network', action='store_true', dest='linux_network', default=False, help="Linux network commands")
 parser.add_argument('--crt-search', action='store_true', dest='crtsh', default=False, help="use crt.sh to find subdomains")
 parser.add_argument("--flush-db", action='store_true', dest='flush_db', default=False, help="flush the recon-ng database")
 parser.add_argument('--subdomains', action='store_true', dest='getsubs', default=False, help="use recon-ng to get a list of subdomains")
@@ -169,6 +173,8 @@ parser.add_argument('--domain', action='store', dest='domain', help='the target 
 parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
 results = parser.parse_args()
+if results.linux_network:
+    linux_network()
 if results.helpcommands:
     l_commands()
 if results.rdp:
