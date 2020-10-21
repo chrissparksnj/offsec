@@ -6,7 +6,6 @@ import subprocess
 import sys
 import pprint
 import inspect
-import wget
 import os
 from terminaltables import AsciiTable
 from colorama import Fore, Back, Style, init
