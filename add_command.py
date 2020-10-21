@@ -1,3 +1,4 @@
+#!/usr/bin/python2.7
 import sqlite3
 from colorama import init, Fore, Back, Style
 init(autoreset=True)
