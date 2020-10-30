@@ -113,7 +113,7 @@ def ssl():
     get_module("ssl")
 
 def smtp():
-    get_module("smtp")
+    get_module("smtp_ha")
 
 def nfs():
     get_module("nfs")
@@ -149,6 +149,7 @@ parser = argparse.ArgumentParser(description="Commands from guide.offsecnewbie.c
 parser.add_argument("-in", "--install", action="store_true", dest="helpcommands", default=False, help="shows install scripts")
 parser.add_argument("-ig", "--intel-gathering", action="store_true", dest="ig", default=False, help="intel gathering commands")
 parser.add_argument("-dn", "--dns", action="store_true", dest="dns", default=False, help="dns commands")
+parser.add_argument("-sm", "--smtp", action="store_true", dest="smtp", default=False, help="smtp commands")
 
 #parser.add_argument('-ss', '--shellshock', action='store_true', dest="shellshock", default=False, help="show shell shock scripts")
 #parser.add_argument('-pk', '--packages', action='store_true', dest='git_packages', default=False,help='show interesting packages and their install instructions')
@@ -186,6 +187,8 @@ if results.dns:
     dns()
 if results.ig:
     ig()
+if results.smtp:
+    smtp()
 """ if results.rdp:
     rdp()
 if results.shellshock:
