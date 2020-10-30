@@ -75,6 +75,7 @@ def get_module(mod):
 def make_table(data, title, inner=None):
     '''termtables takes list of lists, or list of tuples'''
     data_array = data
+    ordered_data = []
     table = AsciiTable(data_array, title=title)
     if inner:
         table.inner_row_border = True
@@ -91,7 +92,7 @@ def nmap():
     get_module("nmap")
 
 def dns():
-    get_module("dns")
+    get_module("dns_ha")
 
 def smb():
     get_module("smb")
@@ -132,51 +133,60 @@ def shellshock():
 def rdp():
     get_module("rdp")
 
-def l_commands():
-    get_module("hc")
+def install():
+    get_module("install")
 
 def linux_network():
     get_module("linux_network")
+
+def ig():
+    get_module("ig")
 
 def all_commands():
     get_all_modules(fit=True)
 
 parser = argparse.ArgumentParser(description="Commands from guide.offsecnewbie.com tutorial")
-parser.add_argument("-hc", "--helper_commands", action="store_true", dest="helpcommands", default=False, help="helper linux commands")
-parser.add_argument('-ss', '--shellshock', action='store_true', dest="shellshock", default=False, help="show shell shock scripts")
-parser.add_argument('-pk', '--packages', action='store_true', dest='git_packages', default=False,help='show interesting packages and their install instructions')
-parser.add_argument('-wa', '--web-app', action='store_true', dest='web_app', default=False, help="show web-app commands")
-parser.add_argument('-sq', '--sql', action='store_true', dest='sql', default=False, help="show web-app commands")
-parser.add_argument('-rp', '--rpc', action='store_true', dest='rpc', default=False, help="show rpc commands")
-parser.add_argument('-nm', '--nmap', action='store_true', dest='nmap', default=False, help="show nmap commands")
-parser.add_argument('-dn', '--dns', action='store_true', dest='dns', default=False, help="shows all dns commands")
-parser.add_argument('-sb', '--smb', action='store_true', dest='smb', default=False, help="shows all smb commands")
-parser.add_argument('-en', '--enum', action='store_true', dest='enum', default=False, help="shows all smb commands")
-parser.add_argument('-sh', '--ssh', action='store_true', dest='ssh', default=False, help="shows all ssh commands")
-parser.add_argument('-ft', '--ftp', action='store_true', dest='ftp', default=False, help="shows all ftp commands")
-parser.add_argument('-sl', '--ssl', action='store_true', dest='ssl', default=False, help="shows all ssl commands")
-parser.add_argument('-sm', "--smtp", action='store_true', dest='smtp', default=False, help="shows all smtp commands")
-parser.add_argument('-nf', '--nfs', action='store_true', dest="nfs", default=False, help="show all nfs commands")
-parser.add_argument('-a', "--all", action='store_true', dest='all_commands', default=False, help="shows all smtp commands")
-parser.add_argument('-gm', '--get-modules', action='store_true', dest='get_methods', default=False, help="shows methodology offered within the tutorial")
-parser.add_argument('-ul', '--useful-links', action="store_true", dest="get_links", default=False, help="shows useful link")
-parser.add_argument('-it', action='store_true', dest='install_template', default=False, help="install a standardized template to your home directory")
-parser.add_argument('-fl', '--fast-lists', action='store_true', dest='fast_list', default=False, help="get lists that are usefule, fast!")
-parser.add_argument('-rd', '--rdp', action='store_true', dest='rdp', default=False, help='RDP Commands')
-parser.add_argument('-ln', '--linux_network', action='store_true', dest='linux_network', default=False, help="Linux network commands")
-parser.add_argument('--crt-search', action='store_true', dest='crtsh', default=False, help="use crt.sh to find subdomains")
-parser.add_argument("--flush-db", action='store_true', dest='flush_db', default=False, help="flush the recon-ng database")
-parser.add_argument('--subdomains', action='store_true', dest='getsubs', default=False, help="use recon-ng to get a list of subdomains")
-parser.add_argument("--raw-ip", action='store_true', dest='getrawips', default=False, help="get raw ip addresses of subdomains")
-parser.add_argument('--domain', action='store', dest='domain', help='the target domain')
+parser.add_argument("-in", "--install", action="store_true", dest="helpcommands", default=False, help="shows install scripts")
+parser.add_argument("-ig", "--intel-gathering", action="store_true", dest="ig", default=False, help="intel gathering commands")
+parser.add_argument("-dn", "--dns", action="store_true", dest="dns", default=False, help="dns commands")
+
+#parser.add_argument('-ss', '--shellshock', action='store_true', dest="shellshock", default=False, help="show shell shock scripts")
+#parser.add_argument('-pk', '--packages', action='store_true', dest='git_packages', default=False,help='show interesting packages and their install instructions')
+#parser.add_argument('-wa', '--web-app', action='store_true', dest='web_app', default=False, help="show web-app commands")
+#parser.add_argument('-sq', '--sql', action='store_true', dest='sql', default=False, help="show web-app commands")
+#parser.add_argument('-rp', '--rpc', action='store_true', dest='rpc', default=False, help="show rpc commands")
+#parser.add_argument('-nm', '--nmap', action='store_true', dest='nmap', default=False, help="show nmap commands")
+#parser.add_argument('-dn', '--dns', action='store_true', dest='dns', default=False, help="shows all dns commands")
+#parser.add_argument('-sb', '--smb', action='store_true', dest='smb', default=False, help="shows all smb commands")
+#parser.add_argument('-en', '--enum', action='store_true', dest='enum', default=False, help="shows all smb commands")
+#parser.add_argument('-sh', '--ssh', action='store_true', dest='ssh', default=False, help="shows all ssh commands")
+#parser.add_argument('-ft', '--ftp', action='store_true', dest='ftp', default=False, help="shows all ftp commands")
+#parser.add_argument('-sl', '--ssl', action='store_true', dest='ssl', default=False, help="shows all ssl commands")
+#parser.add_argument('-sm', "--smtp", action='store_true', dest='smtp', default=False, help="shows all smtp commands")
+#parser.add_argument('-nf', '--nfs', action='store_true', dest="nfs", default=False, help="show all nfs commands")
+#parser.add_argument('-a', "--all", action='store_true', dest='all_commands', default=False, help="shows all smtp commands")
+#parser.add_argument('-gm', '--get-modules', action='store_true', dest='get_methods', default=False, help="shows methodology offered within the tutorial")
+#parser.add_argument('-ul', '--useful-links', action="store_true", dest="get_links", default=False, help="shows useful link")
+#parser.add_argument('-it', action='store_true', dest='install_template', default=False, help="install a standardized template to your home directory")
+#parser.add_argument('-fl', '--fast-lists', action='store_true', dest='fast_list', default=False, help="get lists that are usefule, fast!")
+#parser.add_argument('-rd', '--rdp', action='store_true', dest='rdp', default=False, help='RDP Commands')
+#parser.add_argument('-ln', '--linux_network', action='store_true', dest='linux_network', default=False, help="Linux network commands")
+#parser.add_argument('--crt-search', action='store_true', dest='crtsh', default=False, help="use crt.sh to find subdomains")
+#parser.add_argument("--flush-db", action='store_true', dest='flush_db', default=False, help="flush the recon-ng database")
+#parser.add_argument("--raw-ip", action='store_true', dest='getrawips', default=False, help="get raw ip addresses of subdomains")
+#parser.add_argument('--domain', action='store', dest='domain', help='the target domain')
 parser.add_argument('--version', action='version', version='%(prog)s 1.0')
 
 results = parser.parse_args()
-if results.linux_network:
-    linux_network()
+""" if results.linux_network:
+    linux_network() """
 if results.helpcommands:
-    l_commands()
-if results.rdp:
+    install()
+if results.dns:
+    dns()
+if results.ig:
+    ig()
+""" if results.rdp:
     rdp()
 if results.shellshock:
     shellshock()
@@ -224,5 +234,5 @@ if results.install_template:
 if results.getsubs:
     get_subdomains(results.domain)
 if results.crtsh:
-    cert_search(results.domain)
+    cert_search(results.domain) """
 

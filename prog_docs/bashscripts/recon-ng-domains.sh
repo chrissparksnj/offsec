@@ -1,0 +1,6 @@
+#/usr/bin/bash
+./recon-ng
+modules load recon/domains-hosts/brute_hosts
+db insert domains google.com~
+run
+show hosts 

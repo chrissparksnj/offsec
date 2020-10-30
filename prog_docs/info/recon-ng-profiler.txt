@@ -1,0 +1,4 @@
+modules load profiler
+db insert profiles user@gmail.com~~~~
+show profiles
+run

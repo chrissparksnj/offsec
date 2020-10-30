@@ -1,0 +1,5 @@
+msfconsole
+search dns_amp
+use auxiliary/scanner/dns/dns_amp
+set DOMAINNAME google.com
+set RHOSTS $ip

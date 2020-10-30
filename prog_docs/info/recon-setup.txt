@@ -1,0 +1,6 @@
+workspaces create hackerhouse
+workspaces list
+marketplace install all
+modules load <module load>
+	- info
+modules search
