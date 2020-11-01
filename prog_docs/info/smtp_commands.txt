@@ -1,0 +1,4 @@
+HELO hacker #initiates conversation with smtp server
+MAIL FROM hacker@mydomain.com #send from command
+RCPT TO: randomemployee@company.com #recipient to command.
+
