@@ -2,3 +2,7 @@ HELO hacker #initiates conversation with smtp server
 MAIL FROM hacker@mydomain.com #send from command
 RCPT TO: randomemployee@company.com #recipient to command.
 
+HELP # shows help commands
+EXPN admin # expands username to complete email address. ie EXPN admin
+VRFY admin # verifies a user on the system can receive mail.
+
