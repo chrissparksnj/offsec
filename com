@@ -23,7 +23,7 @@ def insert_port(pn, sn, sd):
     #(id INTEGER PRIMARY KEY AUTOINCREMENT, portnumber text, servicename text, service description text);
     curdir = os.path.dirname(os.path.abspath(__file__))
     conn = sqlite3.connect(curdir + '/offsec.db')
-    conn.execute("INSERT into ports (portnumber, servicename, servicedescription) VALUES (?,?,?)", (cy_on_ma(pn), green(sn), sd))
+    conn.execute("INSERT into ports (portnumber, servicename, servicedescription, pn) VALUES (?,?,?,?)", (cy_on_ma(pn), green(sn), sd, pn))
     conn.commit()
     conn.close()
 
