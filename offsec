@@ -62,7 +62,7 @@ def getports():
     curdir = os.path.dirname(os.path.abspath(__file__))
     conn = sqlite3.connect(curdir + '/offsec.db')
     cur = conn.cursor()
-    cur.execute("SELECT portnumber, servicename, servicedescription FROM ports ORDER BY portnumber DESC")
+    cur.execute("SELECT portnumber, servicename, servicedescription FROM ports ORDER BY portnumber")
     rows = [(red("number"), red("name"), red("description"))]
     results = cur.fetchall()
     for tup in results:
