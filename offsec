@@ -58,6 +58,17 @@ def get_all_modules(fit=False):
         rows.append(tup)
     make_table(rows, "all")
 
+def getports():
+    curdir = os.path.dirname(os.path.abspath(__file__))
+    conn = sqlite3.connect(curdir + '/offsec.db')
+    cur = conn.cursor()
+    cur.execute("SELECT portnumber, servicename, servicedescription FROM ports ORDER BY portnumber DESC")
+    rows = [(red("number"), red("name"), red("description"))]
+    results = cur.fetchall()
+    for tup in results:
+        rows.append(tup)
+    make_table(rows, "ports")
+
 
 def get_module(mod):
     curdir = os.path.dirname(os.path.abspath(__file__))
@@ -72,10 +83,9 @@ def get_module(mod):
 
 
 
-def make_table(data, title, inner=None):
+def make_table(data, title=None, inner=None):
     '''termtables takes list of lists, or list of tuples'''
     data_array = data
-    ordered_data = []
     table = AsciiTable(data_array, title=title)
     if inner:
         table.inner_row_border = True
@@ -145,11 +155,13 @@ def ig():
 def all_commands():
     get_all_modules(fit=True)
 
+
 parser = argparse.ArgumentParser(description="Commands from guide.offsecnewbie.com tutorial")
 parser.add_argument("-in", "--install", action="store_true", dest="helpcommands", default=False, help="shows install scripts")
 parser.add_argument("-ig", "--intel-gathering", action="store_true", dest="ig", default=False, help="intel gathering commands")
 parser.add_argument("-dn", "--dns", action="store_true", dest="dns", default=False, help="dns commands")
 parser.add_argument("-sm", "--smtp", action="store_true", dest="smtp", default=False, help="smtp commands")
+parser.add_argument("-p", "--ports", action="store_true", dest="ports", default=False, help="ports and services info")
 
 #parser.add_argument('-ss', '--shellshock', action='store_true', dest="shellshock", default=False, help="show shell shock scripts")
 #parser.add_argument('-pk', '--packages', action='store_true', dest='git_packages', default=False,help='show interesting packages and their install instructions')
@@ -189,6 +201,8 @@ if results.ig:
     ig()
 if results.smtp:
     smtp()
+if results.ports:
+    getports()
 """ if results.rdp:
     rdp()
 if results.shellshock:
